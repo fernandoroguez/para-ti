@@ -28,8 +28,6 @@ const TEXTO_TOCA = "Tócame";
     ============================================================
     TIEMPOS DE ANIMACIÓN
     ============================================================
-
-    Todos están en milisegundos.
 */
 const CONFIG = {
 
@@ -46,7 +44,7 @@ const CONFIG = {
     flowerPause: 900,
 
     // Transformación flor -> corazón
-    heartDuration: 2800,
+    heartDuration: 3200,
 
     // Espera antes de mostrar el mensaje final
     messageDelay: 500
@@ -55,7 +53,6 @@ const CONFIG = {
 
 /*
     Colores principales.
-    Puedes modificarlos fácilmente.
 */
 const COLORS = {
 
@@ -119,11 +116,12 @@ function wait(ms) {
 
 /*
     Animación mediante requestAnimationFrame.
-
-    Permite hacer movimientos muy fluidos sin depender
-    de librerías externas.
 */
-function animateValue(duration, update, easing = easeInOutCubic) {
+function animateValue(
+    duration,
+    update,
+    easing = easeInOutCubic
+) {
 
     return new Promise(resolve => {
 
@@ -171,7 +169,7 @@ function easeInOutCubic(t) {
 
 
 /*
-    Movimiento muy suave para las transformaciones finales.
+    Movimiento suave de llegada.
 */
 function easeOutQuart(t) {
 
@@ -186,7 +184,7 @@ function easeOutQuart(t) {
 function prepareFlower() {
 
     /*
-        El tallo empieza prácticamente invisible.
+        TALLO
     */
 
     const stemLength = stem.getTotalLength();
@@ -196,7 +194,7 @@ function prepareFlower() {
 
 
     /*
-        Hojas ocultas.
+        HOJAS
     */
 
     leafLeft.style.opacity = "0";
@@ -210,7 +208,7 @@ function prepareFlower() {
 
 
     /*
-        Pétalos empiezan pequeños y transparentes.
+        PÉTALOS
     */
 
     const petals = [
@@ -223,9 +221,15 @@ function prepareFlower() {
     petals.forEach(petal => {
 
         petal.style.opacity = "0";
-        petal.style.transformBox = "fill-box";
-        petal.style.transformOrigin = "center bottom";
-        petal.style.transform = "scaleY(.15) scaleX(.5)";
+
+        petal.style.transformBox =
+            "fill-box";
+
+        petal.style.transformOrigin =
+            "center bottom";
+
+        petal.style.transform =
+            "scaleY(.15) scaleX(.5)";
     });
 
 
@@ -239,33 +243,53 @@ function prepareFlower() {
 
 function createParticle() {
 
-    const particle = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "circle"
-    );
+    const particle =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+        );
 
-    /*
-        Las partículas aparecen alrededor del centro
-        de la flor.
-    */
 
-    const angle = Math.random() * Math.PI * 2;
+    const angle =
+        Math.random() * Math.PI * 2;
+
 
     const distance =
         65 + Math.random() * 85;
 
+
     const x =
-        200 + Math.cos(angle) * distance;
+        200 +
+        Math.cos(angle) *
+        distance;
+
 
     const y =
-        230 + Math.sin(angle) * distance;
+        230 +
+        Math.sin(angle) *
+        distance;
+
 
     const size =
-        .7 + Math.random() * 1.8;
+        .7 +
+        Math.random() * 1.8;
 
-    particle.setAttribute("cx", x);
-    particle.setAttribute("cy", y);
-    particle.setAttribute("r", size);
+
+    particle.setAttribute(
+        "cx",
+        x
+    );
+
+    particle.setAttribute(
+        "cy",
+        y
+    );
+
+    particle.setAttribute(
+        "r",
+        size
+    );
+
 
     particle.setAttribute(
         "fill",
@@ -274,35 +298,45 @@ function createParticle() {
             : COLORS.goldLight
     );
 
-    particle.classList.add("magic-particle");
+
+    particle.classList.add(
+        "magic-particle"
+    );
+
 
     particle.style.setProperty(
         "--dx",
         `${(Math.random() - .5) * 60}px`
     );
 
+
     particle.style.setProperty(
         "--dy",
         `${-30 - Math.random() * 80}px`
     );
+
 
     particle.style.setProperty(
         "--duration",
         `${1200 + Math.random() * 1200}ms`
     );
 
-    particles.appendChild(particle);
+
+    particles.appendChild(
+        particle
+    );
+
 
     setTimeout(() => {
+
         particle.remove();
+
     }, 2500);
 }
 
 
-/*
-    Crea partículas continuamente mientras se construye la flor.
-*/
 let particleInterval = null;
+
 
 function startParticles() {
 
@@ -311,7 +345,6 @@ function startParticles() {
         if (!flowerFinished) {
 
             createParticle();
-
         }
 
     }, 160);
@@ -322,7 +355,9 @@ function stopParticles() {
 
     if (particleInterval) {
 
-        clearInterval(particleInterval);
+        clearInterval(
+            particleInterval
+        );
 
         particleInterval = null;
     }
@@ -335,15 +370,19 @@ function stopParticles() {
 
 async function growStem() {
 
-    const length = stem.getTotalLength();
+    const length =
+        stem.getTotalLength();
+
 
     await animateValue(
+
         CONFIG.stemDuration,
+
         progress => {
 
             stem.style.strokeDashoffset =
-                length * (1 - progress);
-
+                length *
+                (1 - progress);
         }
     );
 }
@@ -356,21 +395,27 @@ async function growStem() {
 async function growLeaves() {
 
     await animateValue(
+
         CONFIG.leavesDuration,
+
         progress => {
 
-            leafLeft.style.opacity = progress;
-            leafRight.style.opacity = progress;
+            leafLeft.style.opacity =
+                progress;
 
-            /*
-                Las hojas nacen desde el tallo.
-            */
+            leafRight.style.opacity =
+                progress;
+
 
             const scale =
-                0.05 + progress * 0.95;
+                0.05 +
+                progress *
+                0.95;
+
 
             leafLeft.style.transform =
                 `scale(${scale})`;
+
 
             leafRight.style.transform =
                 `scale(${scale})`;
@@ -386,56 +431,66 @@ async function growLeaves() {
 async function growPetals() {
 
     const petals = [
+
         petalLeft,
         petalCenter,
         petalRight,
         petalFront
+
     ];
 
 
-    /*
-        Cada pétalo aparece ligeramente después
-        del anterior.
-    */
+    for (
+        let i = 0;
+        i < petals.length;
+        i++
+    ) {
 
-    for (let i = 0; i < petals.length; i++) {
+        const petal =
+            petals[i];
 
-        const petal = petals[i];
 
         await animateValue(
+
             CONFIG.petalsDuration / 4,
+
             progress => {
 
-                petal.style.opacity = progress;
+                petal.style.opacity =
+                    progress;
 
-                /*
-                    Efecto de "abrirse".
-                */
 
                 const scaleY =
-                    .15 + progress * .85;
+                    .15 +
+                    progress *
+                    .85;
+
 
                 const scaleX =
-                    .5 + progress * .5;
+                    .5 +
+                    progress *
+                    .5;
+
 
                 petal.style.transform =
-                    `scaleY(${scaleY})
-                     scaleX(${scaleX})`;
+                    `
+                    scaleY(${scaleY})
+                    scaleX(${scaleX})
+                    `;
             }
         );
     }
 
 
-    /*
-        Brillo interior.
-    */
-
     await animateValue(
+
         900,
+
         progress => {
 
             flowerGlow.style.opacity =
-                progress * .22;
+                progress *
+                .22;
         }
     );
 }
@@ -457,18 +512,17 @@ async function createFlower() {
 
     await growPetals();
 
-    await wait(CONFIG.flowerPause);
+    await wait(
+        CONFIG.flowerPause
+    );
 
     flowerFinished = true;
 
     stopParticles();
 
-    /*
-        El mensaje aparece únicamente cuando
-        la flor ya está terminada.
-    */
-
-    touchMessage.classList.add("visible");
+    touchMessage.classList.add(
+        "visible"
+    );
 }
 
 
@@ -484,373 +538,728 @@ async function startExperience() {
 
     experienceStarted = true;
 
-    /*
-        Desaparece el texto.
-    */
 
-    magicText.style.opacity = "0";
-    magicText.style.transform = "scale(.9)";
+    magicText.style.opacity =
+        "0";
+
+    magicText.style.transform =
+        "scale(.9)";
+
 
     await wait(700);
 
-    /*
-        Ocultamos completamente la intro.
-    */
 
-    intro.classList.remove("active");
+    intro.classList.remove(
+        "active"
+    );
 
-    /*
-        Mostramos la escena.
-    */
 
-    flowerScene.classList.add("active");
+    flowerScene.classList.add(
+        "active"
+    );
+
 
     await wait(500);
 
-    /*
-        Empieza la construcción.
-    */
 
     createFlower();
 }
 
 
 /* ============================================================
-   TRANSFORMACIÓN FLOR -> CORAZÓN
+   🌷 → ❤️
+   
+   TRANSFORMACIÓN MEDIANTE MUCHOS PÉTALOS
 ============================================================ */
 
-/*
-    Esta es la parte más importante.
+async function transformFlowerIntoHeart() {
 
-    No creamos otro corazón.
-
-    Los mismos elementos de la flor se reorganizan:
-
-        - pétalo izquierdo  -> lóbulo izquierdo
-        - pétalo derecho    -> lóbulo derecho
-        - pétalo central    -> parte superior/central
-        - pétalo frontal    -> parte inferior
-        - hojas             -> laterales/inferiores
-        - tallo             -> eje inferior
-
-    De esta manera se conserva la sensación de que la flor
-    realmente se está convirtiendo en el corazón.
-*/
-
-
-function transformFlowerIntoHeart() {
-
-    if (transformationStarted || !flowerFinished) {
+    if (
+        transformationStarted ||
+        !flowerFinished
+    ) {
         return;
     }
 
     transformationStarted = true;
 
-    touchMessage.classList.remove("visible");
 
-    flowerSvg.classList.add("heart-mode");
+    /*
+        Quitamos "Tócame".
+    */
+
+    touchMessage.classList.remove(
+        "visible"
+    );
+
+
+    flowerSvg.classList.add(
+        "heart-mode"
+    );
+
+
+    /* ========================================================
+       CONFIGURACIÓN
+    ======================================================== */
+
+    /*
+        Número de pétalos que formarán el corazón.
+
+        Puedes probar:
+
+        40 = menos pétalos
+        52 = recomendado
+        65 = corazón muy definido
+        80 = muy denso
+    */
+
+    const HEART_PETAL_COUNT = 52;
 
 
     /*
-        Ocultamos progresivamente el brillo.
+        Tamaño del corazón.
+
+        Aumenta este número para hacerlo más grande.
     */
 
+    const HEART_SCALE = 7.0;
+
+
+    /*
+        Posición del corazón dentro del SVG.
+    */
+
+    const HEART_CENTER_X = 200;
+
+    const HEART_CENTER_Y = 315;
+
+
+    /*
+        Duración total.
+    */
+
+    const DURATION =
+        Math.max(
+            CONFIG.heartDuration,
+            3200
+        );
+
+
+    /* ========================================================
+       CONTENEDOR DE LOS PÉTALOS
+    ======================================================== */
+
+    const heartGroup =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g"
+        );
+
+
+    heartGroup.setAttribute(
+        "id",
+        "petalHeart"
+    );
+
+
+    /*
+        Lo ponemos encima de la flor.
+    */
+
+    flowerSvg.appendChild(
+        heartGroup
+    );
+
+
+    /* ========================================================
+       FUNCIÓN QUE GENERA LA SILUETA
+       DEL CORAZÓN
+    ======================================================== */
+
+    function heartPoint(
+        t,
+        scale = HEART_SCALE
+    ) {
+
+        /*
+            Fórmula matemática del corazón.
+        */
+
+        const x =
+            16 *
+            Math.pow(
+                Math.sin(t),
+                3
+            );
+
+
+        const y =
+            13 *
+            Math.cos(t)
+
+            -
+            5 *
+            Math.cos(
+                2 * t
+            )
+
+            -
+            2 *
+            Math.cos(
+                3 * t
+            )
+
+            -
+            Math.cos(
+                4 * t
+            );
+
+
+        return {
+
+            x:
+                HEART_CENTER_X +
+                x * scale,
+
+            y:
+                HEART_CENTER_Y -
+                y * scale
+        };
+    }
+
+
+    /* ========================================================
+       CREAR LAS COPIAS
+    ======================================================== */
+
+    const originals = [
+
+        petalLeft,
+        petalCenter,
+        petalRight,
+        petalFront
+
+    ];
+
+
+    const heartPetals = [];
+
+
+    for (
+        let i = 0;
+        i < HEART_PETAL_COUNT;
+        i++
+    ) {
+
+        /*
+            Posición del pétalo sobre
+            la curva del corazón.
+        */
+
+        const t =
+            (
+                Math.PI *
+                2 *
+                i
+            ) /
+            HEART_PETAL_COUNT;
+
+
+        const target =
+            heartPoint(t);
+
+
+        /*
+            Siguiente punto.
+
+            Sirve para orientar cada pétalo
+            siguiendo la curva.
+        */
+
+        const nextT =
+            t +
+            (
+                Math.PI *
+                2 /
+                HEART_PETAL_COUNT
+            ) *
+            .7;
+
+
+        const next =
+            heartPoint(nextT);
+
+
+        const angle =
+            Math.atan2(
+
+                next.y -
+                target.y,
+
+                next.x -
+                target.x
+
+            ) *
+            180 /
+            Math.PI;
+
+
+        /*
+            Elegimos uno de los cuatro
+            pétalos originales.
+        */
+
+        const original =
+            originals[
+                i %
+                originals.length
+            ];
+
+
+        /*
+            COPIAMOS EL PÉTALO REAL.
+        */
+
+        const clone =
+            original.cloneNode(
+                true
+            );
+
+
+        /*
+            Eliminamos el ID para no duplicarlo.
+        */
+
+        clone.removeAttribute(
+            "id"
+        );
+
+
+        clone.classList.add(
+            "heart-petal"
+        );
+
+
+        /*
+            Tamaño de cada pétalo.
+
+            Pequeñas variaciones aleatorias.
+        */
+
+        const scale =
+            .13 +
+            Math.random() *
+            .055;
+
+
+        /*
+            Todos comienzan aproximadamente
+            desde el centro de la flor.
+        */
+
+        const startX = 200;
+
+        const startY = 200;
+
+
+        /*
+            No llegan todos a la vez.
+        */
+
+        const delay =
+            (
+                i /
+                HEART_PETAL_COUNT
+            ) *
+            850
+
+            +
+
+            Math.random() *
+            120;
+
+
+        clone.style.opacity =
+            "0";
+
+
+        heartGroup.appendChild(
+            clone
+        );
+
+
+        heartPetals.push({
+
+            element:
+                clone,
+
+            startX:
+                startX,
+
+            startY:
+                startY,
+
+            targetX:
+                target.x,
+
+            targetY:
+                target.y,
+
+            angle:
+                angle,
+
+            scale:
+                scale,
+
+            delay:
+                delay
+        });
+    }
+
+
+    /* ========================================================
+       RECOGER FLOR ORIGINAL
+    ======================================================== */
+
+    const originalPetals = [
+
+        petalLeft,
+        petalCenter,
+        petalRight,
+        petalFront
+
+    ];
+
+
     animateValue(
-        CONFIG.heartDuration,
+
+        DURATION * .52,
+
+        progress => {
+
+            const scale =
+                1 -
+                progress *
+                .72;
+
+
+            const y =
+                progress *
+                38;
+
+
+            const rotate =
+                progress *
+                8;
+
+
+            originalPetals.forEach(
+
+                (
+                    petal,
+                    index
+                ) => {
+
+                    const extraX =
+                        index === 0
+                            ? -4
+                            :
+                        index === 2
+                            ? 4
+                            :
+                            0;
+
+
+                    petal.style.transform =
+                        `
+                        translate(
+                            ${extraX}px,
+                            ${y}px
+                        )
+                        rotate(${rotate}deg)
+                        scale(${scale})
+                        `;
+
+
+                    petal.style.opacity =
+                        1 -
+                        progress;
+                }
+            );
+
+
+            /*
+                TALLO
+            */
+
+            stem.style.transform =
+                `
+                translateY(
+                    ${progress * 75}px
+                )
+                scaleY(
+                    ${1 - progress * .82}
+                )
+                `;
+
+
+            stem.style.opacity =
+                1 -
+                progress;
+
+
+            /*
+                HOJA IZQUIERDA
+            */
+
+            leafLeft.style.transform =
+                `
+                translate(
+                    ${-progress * 32}px,
+                    ${progress * 45}px
+                )
+                rotate(
+                    ${-progress * 55}deg
+                )
+                scale(
+                    ${1 - progress * .65}
+                )
+                `;
+
+
+            /*
+                HOJA DERECHA
+            */
+
+            leafRight.style.transform =
+                `
+                translate(
+                    ${progress * 32}px,
+                    ${progress * 45}px
+                )
+                rotate(
+                    ${progress * 55}deg
+                )
+                scale(
+                    ${1 - progress * .65}
+                )
+                `;
+
+
+            leafLeft.style.opacity =
+                1 -
+                progress;
+
+
+            leafRight.style.opacity =
+                1 -
+                progress;
+        },
+
+        easeInOutCubic
+    );
+
+
+    /* ========================================================
+       HACER VIAJAR LOS PÉTALOS
+       HACIA EL CORAZÓN
+    ======================================================== */
+
+    const animations =
+        heartPetals.map(
+            data => {
+
+                return new Promise(
+                    resolve => {
+
+                        setTimeout(
+                            () => {
+
+                                animateValue(
+
+                                    DURATION *
+                                    .82,
+
+                                    progress => {
+
+                                        /*
+                                            Movimiento X.
+                                        */
+
+                                        const x =
+                                            data.startX +
+
+                                            (
+                                                data.targetX -
+                                                data.startX
+                                            ) *
+                                            progress;
+
+
+                                        /*
+                                            Movimiento Y.
+                                        */
+
+                                        const y =
+                                            data.startY +
+
+                                            (
+                                                data.targetY -
+                                                data.startY
+                                            ) *
+                                            progress;
+
+
+                                        /*
+                                            Pequeña curva
+                                            durante el vuelo.
+                                        */
+
+                                        const curve =
+                                            Math.sin(
+                                                progress *
+                                                Math.PI
+                                            ) *
+                                            16;
+
+
+                                        /*
+                                            Escala.
+                                        */
+
+                                        const currentScale =
+                                            data.scale *
+                                            (
+                                                1.25 -
+                                                .25 *
+                                                easeOutQuart(
+                                                    progress
+                                                )
+                                            );
+
+
+                                        /*
+                                            Rotación.
+                                        */
+
+                                        const rotation =
+                                            data.angle *
+                                            progress;
+
+
+                                        /*
+                                            Aparición.
+                                        */
+
+                                        data.element.style.opacity =
+                                            Math.min(
+                                                1,
+                                                progress *
+                                                2.2
+                                            );
+
+
+                                        /*
+                                            Posición final.
+                                        */
+
+                                        data.element.style.transform =
+                                            `
+                                            translate(
+                                                ${x - 200}px,
+                                                ${y - 200 + curve}px
+                                            )
+
+                                            rotate(
+                                                ${rotation}deg
+                                            )
+
+                                            scale(
+                                                ${currentScale}
+                                            )
+                                            `;
+                                    },
+
+                                    easeOutQuart
+
+                                ).then(
+                                    resolve
+                                );
+
+                            },
+
+                            data.delay
+                        );
+                    }
+                );
+            }
+        );
+
+
+    /* ========================================================
+       BRILLO
+    ======================================================== */
+
+    animateValue(
+
+        DURATION,
+
         progress => {
 
             flowerGlow.style.opacity =
-                Math.max(
-                    0,
-                    .22 * (1 - progress)
+                .22 *
+                (
+                    1 -
+                    progress
                 );
         }
     );
 
 
-    /*
-        ========================================================
-        PETALOS
-        ========================================================
+    /* ========================================================
+       ESPERAR A QUE TODOS LOS PÉTALOS
+       TERMINEN
+    ======================================================== */
 
-        En lugar de desaparecer, cada pétalo cambia:
-
-        posición
-        escala
-        rotación
-
-        para construir la silueta del corazón.
-    */
-
-    const startTransforms = {
-
-        left: {
-            x: 0,
-            y: 0,
-            scale: 1,
-            rotate: 0
-        },
-
-        center: {
-            x: 0,
-            y: 0,
-            scale: 1,
-            rotate: 0
-        },
-
-        right: {
-            x: 0,
-            y: 0,
-            scale: 1,
-            rotate: 0
-        },
-
-        front: {
-            x: 0,
-            y: 0,
-            scale: 1,
-            rotate: 0
-        }
-    };
-
-
-    /*
-        Posiciones finales.
-
-        Están calculadas para que los pétalos continúen
-        formando una masa amarilla reconocible.
-    */
-
-    const targets = {
-
-        left: {
-            x: -55,
-            y: 30,
-            scale: .68,
-            rotate: -27
-        },
-
-        center: {
-            x: 0,
-            y: 82,
-            scale: .72,
-            rotate: 180
-        },
-
-        right: {
-            x: 55,
-            y: 30,
-            scale: .68,
-            rotate: 27
-        },
-
-        front: {
-            x: 0,
-            y: 90,
-            scale: .82,
-            rotate: 180
-        }
-    };
-
-
-    function animatePetal(
-        element,
-        start,
-        target
-    ) {
-
-        return animateValue(
-            CONFIG.heartDuration,
-            progress => {
-
-                const x =
-                    start.x +
-                    (target.x - start.x) *
-                    progress;
-
-                const y =
-                    start.y +
-                    (target.y - start.y) *
-                    progress;
-
-                const scale =
-                    start.scale +
-                    (target.scale - start.scale) *
-                    progress;
-
-                const rotate =
-                    start.rotate +
-                    (target.rotate - start.rotate) *
-                    progress;
-
-                element.style.transform =
-                    `translate(${x}px, ${y}px)
-                     rotate(${rotate}deg)
-                     scale(${scale})`;
-            },
-            easeInOutCubic
-        );
-    }
-
-
-    /*
-        Ejecutamos simultáneamente todos los pétalos.
-    */
-
-    const animations = [
-
-        animatePetal(
-            petalLeft,
-            startTransforms.left,
-            targets.left
-        ),
-
-        animatePetal(
-            petalCenter,
-            startTransforms.center,
-            targets.center
-        ),
-
-        animatePetal(
-            petalRight,
-            startTransforms.right,
-            targets.right
-        ),
-
-        animatePetal(
-            petalFront,
-            startTransforms.front,
-            targets.front
-        )
-    ];
-
-
-    /*
-        ========================================================
-        HOJAS
-        ========================================================
-
-        Las hojas se acercan al cuerpo del corazón.
-    */
-
-    const leafAnimation = animateValue(
-        CONFIG.heartDuration,
-        progress => {
-
-            /*
-                Izquierda
-            */
-
-            const leftX =
-                -65 * progress;
-
-            const leftY =
-                20 * progress;
-
-            const leftScale =
-                1 - .55 * progress;
-
-            const leftRotation =
-                0 - 55 * progress;
-
-            leafLeft.style.transform =
-                `translate(${leftX}px, ${leftY}px)
-                 rotate(${leftRotation}deg)
-                 scale(${leftScale})`;
-
-
-            /*
-                Derecha
-            */
-
-            const rightX =
-                65 * progress;
-
-            const rightY =
-                20 * progress;
-
-            const rightScale =
-                1 - .55 * progress;
-
-            const rightRotation =
-                0 + 55 * progress;
-
-            leafRight.style.transform =
-                `translate(${rightX}px, ${rightY}px)
-                 rotate(${rightRotation}deg)
-                 scale(${rightScale})`;
-
-
-            /*
-                Poco a poco las hojas se integran
-                en el dorado del corazón.
-            */
-
-            const opacity =
-                1 - progress * .55;
-
-            leafLeft.style.opacity = opacity;
-            leafRight.style.opacity = opacity;
-        },
-        easeInOutCubic
+    await Promise.all(
+        animations
     );
 
 
-    /*
-        ========================================================
-        TALLO
-        ========================================================
+    await wait(250);
 
-        El tallo se recoge hacia el centro.
 
-        No desaparece inmediatamente.
-    */
+    /* ========================================================
+       DESTELLO FINAL
+    ======================================================== */
 
-    const stemAnimation = animateValue(
-        CONFIG.heartDuration,
-        progress => {
+    heartPetals.forEach(
+        data => {
 
-            const y =
-                75 * progress;
-
-            const scale =
-                1 - .65 * progress;
-
-            const rotation =
-                -progress * 180;
-
-            stem.style.transform =
-                `translateY(${y}px)
-                 rotate(${rotation}deg)
-                 scaleY(${scale})`;
-
-            /*
-                El verde se va atenuando.
-            */
-
-            stem.style.opacity =
-                1 - progress * .85;
-        },
-        easeOutQuart
+            data.element.style.filter =
+                `
+                drop-shadow(
+                    0 0 4px
+                    rgba(
+                        255,
+                        225,
+                        70,
+                        .45
+                    )
+                )
+                `;
+        }
     );
 
 
+    await wait(350);
+
+
     /*
-        ========================================================
-        ESPERA A QUE TERMINE TODO
-        ========================================================
+        CORAZÓN TERMINADO.
     */
 
-    Promise.all([
-        ...animations,
-        leafAnimation,
-        stemAnimation
-    ]).then(async () => {
-
-        await wait(CONFIG.messageDelay);
-
-        showFinalMessage();
-    });
+    showFinalMessage();
 }
 
 
@@ -861,15 +1270,18 @@ function transformFlowerIntoHeart() {
 function showFinalMessage() {
 
     /*
-        Inserta el mensaje.
+        textContent permite que el mensaje sea seguro.
 
-        white-space pre-line permite utilizar \n
-        para crear varias líneas.
+        Puedes utilizar \n para varias líneas.
     */
 
-    finalMessage.textContent = mensaje;
+    finalMessage.textContent =
+        mensaje;
 
-    finalMessage.classList.add("visible");
+
+    finalMessage.classList.add(
+        "visible"
+    );
 }
 
 
@@ -877,24 +1289,17 @@ function showFinalMessage() {
    INTERACCIÓN INICIAL
 ============================================================ */
 
-/*
-    pointerdown funciona tanto para:
-
-        - dedo
-        - ratón
-        - stylus
-
-    y evita tener que crear eventos diferentes.
-*/
-
 intro.addEventListener(
+
     "pointerdown",
+
     event => {
 
         event.preventDefault();
 
         startExperience();
     },
+
     {
         passive: false
     }
@@ -906,13 +1311,16 @@ intro.addEventListener(
 ============================================================ */
 
 flowerSvg.addEventListener(
+
     "pointerdown",
+
     event => {
 
         event.preventDefault();
 
         transformFlowerIntoHeart();
     },
+
     {
         passive: false
     }
