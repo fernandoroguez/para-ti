@@ -9,7 +9,7 @@
 
     CAMBIA SOLAMENTE ESTA VARIABLE para poner tu mensaje.
 */
-const mensaje = "TU MENSAJE AQUÍ";
+const mensaje = "Es una pena no poder comprarte flores, pero eso no significa que no te ame, te amo más que a nada, muchisimas gracias por aparecer en mi vida";
 
 
 /*
