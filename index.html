@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Importante para móviles -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Para ti ❤️</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main id="experience">
+
+        <!-- =====================================================
+             PANTALLA INICIAL
+        ====================================================== -->
+        <section id="intro" class="screen active">
+            <div id="magicText" class="magic-text">
+                <span>Toca aquí para la magia</span>
+            </div>
+        </section>
+
+
+        <!-- =====================================================
+             ESCENA DE LA FLOR
+        ====================================================== -->
+        <section id="flowerScene" class="screen">
+
+            <div id="flowerWrapper">
+
+                <!--
+                    SVG principal.
+
+                    La flor, hojas y tallo viven dentro del mismo SVG.
+                    Esto permite animarlos individualmente y posteriormente
+                    reorganizarlos para formar el corazón.
+                -->
+                <svg id="flowerSvg"
+                     viewBox="0 0 400 650"
+                     preserveAspectRatio="xMidYMid meet"
+                     aria-label="Flor amarilla">
+
+                    <defs>
+
+                        <!-- Gradiente dorado -->
+                        <linearGradient id="petalGradient"
+                                        x1="0"
+                                        y1="0"
+                                        x2="1"
+                                        y2="1">
+                            <stop offset="0%" stop-color="#fff59d"/>
+                            <stop offset="35%" stop-color="#ffe44d"/>
+                            <stop offset="75%" stop-color="#f6c928"/>
+                            <stop offset="100%" stop-color="#dca817"/>
+                        </linearGradient>
+
+                        <linearGradient id="petalLight"
+                                        x1="0"
+                                        y1="0"
+                                        x2="0"
+                                        y2="1">
+                            <stop offset="0%" stop-color="#fffbd0"/>
+                            <stop offset="50%" stop-color="#ffe84d"/>
+                            <stop offset="100%" stop-color="#e5b51c"/>
+                        </linearGradient>
+
+                        <linearGradient id="stemGradient"
+                                        x1="0"
+                                        y1="0"
+                                        x2="1"
+                                        y2="0">
+                            <stop offset="0%" stop-color="#315f32"/>
+                            <stop offset="50%" stop-color="#5f9b4f"/>
+                            <stop offset="100%" stop-color="#2e6030"/>
+                        </linearGradient>
+
+                        <!-- Brillo -->
+                        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+                            <feGaussianBlur stdDeviation="5" result="blur"/>
+                            <feMerge>
+                                <feMergeNode in="blur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+
+                        <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+                            <feGaussianBlur stdDeviation="10"/>
+                        </filter>
+
+                    </defs>
+
+
+                    <!-- =================================================
+                         PARTÍCULAS
+                    ================================================== -->
+                    <g id="particles"></g>
+
+
+                    <!-- =================================================
+                         FLOR
+                    ================================================== -->
+                    <g id="flower">
+
+                        <!-- Tallo -->
+                        <path id="stem"
+                              d="M200 590
+                                 C198 520 203 445 200 365
+                                 C199 330 200 305 200 285"
+                              fill="none"
+                              stroke="url(#stemGradient)"
+                              stroke-width="13"
+                              stroke-linecap="round"/>
+
+
+                        <!-- Hoja izquierda -->
+                        <path id="leafLeft"
+                              d="M199 485
+                                 C165 470 122 438 96 391
+                                 C142 397 181 419 201 453
+                                 C208 466 207 478 199 485Z"
+                              fill="url(#stemGradient)"/>
+
+
+                        <!-- Hoja derecha -->
+                        <path id="leafRight"
+                              d="M201 445
+                                 C236 428 272 399 294 354
+                                 C251 364 220 382 201 413
+                                 C194 425 195 437 201 445Z"
+                              fill="url(#stemGradient)"/>
+
+
+                        <!-- =================================================
+                             PÉTALOS
+
+                             Estos elementos son los que posteriormente
+                             se reorganizan para crear el corazón.
+                        ================================================== -->
+
+                        <!-- Pétalo izquierdo -->
+                        <path id="petalLeft"
+                              class="petal"
+                              d="M200 300
+                                 C158 300 124 274 116 231
+                                 C109 194 122 151 148 124
+                                 C158 161 176 182 200 195
+                                 C189 235 190 271 200 300Z"
+                              fill="url(#petalGradient)"/>
+
+
+                        <!-- Pétalo central -->
+                        <path id="petalCenter"
+                              class="petal"
+                              d="M200 300
+                                 C166 264 158 218 164 169
+                                 C169 125 185 91 200 69
+                                 C215 91 231 125 236 169
+                                 C242 218 234 264 200 300Z"
+                              fill="url(#petalLight)"/>
+
+
+                        <!-- Pétalo derecho -->
+                        <path id="petalRight"
+                              class="petal"
+                              d="M200 300
+                                 C242 300 276 274 284 231
+                                 C291 194 278 151 252 124
+                                 C242 161 224 182 200 195
+                                 C211 235 210 271 200 300Z"
+                              fill="url(#petalGradient)"/>
+
+
+                        <!-- Pétalo frontal -->
+                        <path id="petalFront"
+                              class="petal"
+                              d="M200 302
+                                 C174 288 156 261 156 228
+                                 C156 190 177 157 200 143
+                                 C223 157 244 190 244 228
+                                 C244 261 226 288 200 302Z"
+                              fill="url(#petalLight)"
+                              opacity="0.95"/>
+
+
+                        <!-- Brillo interior -->
+                        <ellipse id="flowerGlow"
+                                 cx="200"
+                                 cy="210"
+                                 rx="48"
+                                 ry="65"
+                                 fill="#fff6a3"
+                                 opacity="0.08"
+                                 filter="url(#softGlow)"/>
+
+                    </g>
+
+                </svg>
+
+                <!-- =====================================================
+                     MENSAJE "TÓCAME"
+                ====================================================== -->
+                <div id="touchMessage" class="touch-message">
+                    <span>Tócame</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENSAJE FINAL
+        ====================================================== -->
+        <div id="finalMessage"></div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
