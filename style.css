@@ -1,0 +1,475 @@
+/* ============================================================
+   VARIABLES PRINCIPALES
+   Puedes cambiar fácilmente la estética desde aquí.
+============================================================ */
+
+:root {
+
+    --background: #000000;
+
+    --gold: #ffe04a;
+    --gold-soft: #fff4a0;
+
+    --green: #4f8d4a;
+
+    --text: #fffbe1;
+
+    /* Tamaño máximo de la flor */
+    --flower-size: min(88vw, 620px);
+}
+
+
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: var(--background);
+
+    touch-action: manipulation;
+}
+
+
+/* ============================================================
+   ESCENA PRINCIPAL
+============================================================ */
+
+body {
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    color: var(--text);
+}
+
+
+#experience {
+    position: relative;
+
+    width: 100vw;
+    height: 100dvh;
+
+    overflow: hidden;
+
+    background: #000;
+}
+
+
+/* ============================================================
+   PANTALLAS
+============================================================ */
+
+.screen {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 1.2s ease,
+        visibility 1.2s ease;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* ============================================================
+   INTRO
+============================================================ */
+
+#intro {
+    cursor: pointer;
+
+    user-select: none;
+
+    z-index: 10;
+}
+
+
+.magic-text {
+    position: relative;
+
+    padding: 30px;
+
+    font-size: clamp(26px, 7vw, 48px);
+
+    letter-spacing: 1px;
+
+    text-align: center;
+
+    color: #f8f5e3;
+
+    animation:
+        magicBreathing 3s ease-in-out infinite;
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+
+.magic-text::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 25%;
+    right: 25%;
+    bottom: 14px;
+
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 236, 113, .65),
+        transparent
+    );
+
+    opacity: .5;
+
+    filter: blur(.5px);
+}
+
+
+.magic-text span {
+
+    text-shadow:
+        0 0 10px rgba(255, 232, 95, .15),
+        0 0 30px rgba(255, 232, 95, .08);
+}
+
+
+@keyframes magicBreathing {
+
+    0%,
+    100% {
+        opacity: .65;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.025);
+    }
+}
+
+
+/* ============================================================
+   FLOR
+============================================================ */
+
+#flowerScene {
+    pointer-events: none;
+}
+
+
+#flowerWrapper {
+
+    position: relative;
+
+    width: var(--flower-size);
+    max-width: 620px;
+
+    aspect-ratio: 400 / 650;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+#flowerSvg {
+
+    width: 100%;
+    height: 100%;
+
+    overflow: visible;
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    filter:
+        drop-shadow(
+            0 0 12px rgba(255, 224, 60, .08)
+        );
+}
+
+
+/* ============================================================
+   PÉTALOS
+============================================================ */
+
+.petal {
+
+    transform-box: fill-box;
+    transform-origin: center;
+
+    transition:
+        filter .8s ease;
+}
+
+
+.petal:hover {
+
+    filter:
+        drop-shadow(
+            0 0 10px rgba(255, 225, 60, .35)
+        );
+}
+
+
+/* ============================================================
+   MENSAJE TÓCAME
+============================================================ */
+
+.touch-message {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 4%;
+
+    transform:
+        translate(-50%, 20px);
+
+    opacity: 0;
+
+    color: var(--text);
+
+    font-size: clamp(24px, 6vw, 38px);
+
+    letter-spacing: 2px;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    text-shadow:
+        0 0 10px rgba(255, 225, 80, .25);
+}
+
+
+.touch-message.visible {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+
+    animation:
+        touchPulse 2.2s ease-in-out infinite;
+}
+
+
+@keyframes touchPulse {
+
+    0%,
+    100% {
+        text-shadow:
+            0 0 8px rgba(255, 224, 60, .15);
+    }
+
+    50% {
+        text-shadow:
+            0 0 18px rgba(255, 224, 60, .6),
+            0 0 35px rgba(255, 224, 60, .2);
+    }
+}
+
+
+/* ============================================================
+   PARTÍCULAS
+============================================================ */
+
+.magic-particle {
+
+    transform-box: fill-box;
+
+    animation:
+        particleFloat var(--duration)
+        ease-out forwards;
+}
+
+
+@keyframes particleFloat {
+
+    0% {
+        opacity: 0;
+        transform:
+            translate(0, 10px)
+            scale(.2);
+    }
+
+    25% {
+        opacity: .9;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate(
+                var(--dx),
+                var(--dy)
+            )
+            scale(.8);
+    }
+}
+
+
+/* ============================================================
+   MENSAJE FINAL
+============================================================ */
+
+#finalMessage {
+
+    position: absolute;
+
+    z-index: 20;
+
+    left: 50%;
+    top: 50%;
+
+    width: min(55vw, 300px);
+
+    transform:
+        translate(-50%, -50%)
+        scale(.9);
+
+    text-align: center;
+
+    color: #fffbea;
+
+    font-size: clamp(18px, 4.8vw, 29px);
+
+    line-height: 1.35;
+
+    letter-spacing: .4px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    text-shadow:
+        0 0 8px rgba(255, 228, 80, .45),
+        0 0 22px rgba(255, 214, 40, .2);
+
+    transition:
+        opacity 1.4s ease,
+        transform 1.4s cubic-bezier(.2,.8,.2,1);
+}
+
+
+#finalMessage.visible {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+
+/* ============================================================
+   CORAZÓN FINAL
+
+   El corazón aparece mediante los propios elementos de la flor,
+   no mediante una imagen independiente.
+============================================================ */
+
+#flowerSvg.heart-mode {
+
+    filter:
+        drop-shadow(
+            0 0 18px rgba(255, 219, 49, .2)
+        );
+}
+
+
+/* ============================================================
+   MÓVILES PEQUEÑOS
+============================================================ */
+
+@media (max-width: 360px) {
+
+    :root {
+        --flower-size: 92vw;
+    }
+
+    .magic-text {
+        font-size: 25px;
+    }
+
+    .touch-message {
+        bottom: 2%;
+    }
+
+    #finalMessage {
+        width: 58vw;
+        font-size: 17px;
+    }
+}
+
+
+/* ============================================================
+   PANTALLAS ALTAS / MÓVILES
+============================================================ */
+
+@media (max-height: 650px) {
+
+    :root {
+        --flower-size: min(78vh, 500px);
+    }
+
+    .touch-message {
+        bottom: 1%;
+    }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+
+   Respeta la preferencia del sistema.
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
