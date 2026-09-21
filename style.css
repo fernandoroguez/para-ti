@@ -473,3 +473,33 @@ body {
         transition-duration: .01ms !important;
     }
 }
+/* ============================================================
+   PÉTALOS DEL CORAZÓN
+============================================================ */
+
+#petalHeart {
+    overflow: visible;
+    pointer-events: none;
+}
+
+.heart-petal {
+
+    transform-box: fill-box;
+    transform-origin: center center;
+
+    transform-style: preserve-3d;
+
+    will-change:
+        transform,
+        opacity;
+
+    /*
+        Los pétalos mantienen el degradado original
+        del tulipán.
+    */
+
+    filter:
+        drop-shadow(
+            0 0 2px rgba(255, 220, 60, .15)
+        );
+}
